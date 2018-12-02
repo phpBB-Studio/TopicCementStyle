@@ -1,0 +1,28 @@
+/* CSS style*/
+
+.tcs-fieldset-1 {
+	padding: 5px 10px;
+	border-radius: 7px;
+	margin: 10px 0;
+	box-shadow: 1px 2px 3px grey;
+	font-size: inherit;
+	background-color: #e1f1ff;
+}
+
+.tcs-bold {
+	font-weight: bold;
+}
+
+.tcs-fa-green {
+	color: green;
+	text-shadow: 3px 3px 1px #cccccc;
+	font-size: 1.1em;
+}
+
+fieldset.fields1 dt {
+	width: 20em;
+}
+
+fieldset.fields1 dd {
+	margin-left: 21em;
+}

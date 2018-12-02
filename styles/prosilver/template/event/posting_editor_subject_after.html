@@ -1,0 +1,100 @@
+{% if S_TOPIC_PRIORITY %}
+
+	{# Include TCS - CSS #}
+	{% if not definition.INCLUDED_TCSCSS %}
+		{% INCLUDECSS '@phpbbstudio_tcs/tcs.css' %}
+		{% DEFINE INCLUDED_TCSCSS = true %}
+	{% endif %}
+
+	<fieldset class="tcs-fieldset-1">
+		<legend class="tcs-bold tcs-fa-green">{{ lang('TCS_LEGEND_1') }}</legend>
+		<dl>
+			<dt>
+				<label for="topic_priority"><i class="fa fa-refresh fa-spin fa-fw tcs-fa-green"></i> {{ lang('TCS_PRIORITY') ~ lang('COLON') }}</label><br>{{ lang('TCS_PRIORITY_DESC') }}
+			</dt>
+			<dd>
+				<input type="number" class="inputbox autowidth" min="0" pattern="[0-9]" name="topic_priority" id="topic_priority" tabindex="1" value="{{ TOPIC_PRIORITY }}" /> {{ lang('TCS_PRIORITY_EXP') }}
+			</dd>
+		</dl>
+
+		<dl>
+			<dt>
+				<label for="topic_color"><i class="fa fa-pencil-square-o fa-fw tcs-fa-green" aria-hidden="true"></i> {{ lang('TCS_TOPIC_COLOR') ~ lang('COLON') }}</label><br>{{ lang('TCS_COLORPICKER_EXPLAIN') }}
+			</dt>
+			<dd>
+				<input type="text" name="topic_color" id="topic_color" class="input" value="{{ TOPIC_COLOR }}" pattern="#[a-fA-F0-9]{6,6}" size="7" title="{{ lang('TCS_COLORPICKER_EXPLAIN') }}" onchange="document.getElementById('topic_color_hex').value = this.value;" />
+
+				<input type="color" name="topic_color_hex" id="topic_color_hex" class="input" value="{{ TOPIC_COLOR }}" title="{{ lang('TCS_COLORPICKER_EXPLAIN') }}" onchange="document.getElementById('topic_color').value = this.value;"/>
+				{{ lang('TCS_TOPIC_HEX_STORED') }}{{ lang('COLON') }}
+				<input type="text" class="input" value="{{ TOPIC_COLOR }}" size="7" title="{{ lang('TCS_COLORPICKER_STORED') }}" readonly="readonly" disabled="disabled" />
+
+				<input type="color" class="input" value="{{ TOPIC_COLOR }}" title="{{ lang('TCS_COLORPICKER_STORED') }}" adonly="readonly" disabled="disabled" />{{ lang('TCS_COLOR_EXPLAIN') }}
+			</dd>
+		</dl>
+
+		<dl>
+			<dt>
+				<label for="topic_background"><i class="fa fa-pencil-square-o fa-fw tcs-fa-green" aria-hidden="true"></i> {{ lang('TCS_TOPIC_BCKG') ~ lang('COLON') }}</label><br>{{ lang('TCS_COLORPICKER_EXPLAIN') }}
+			</dt>
+			<dd>
+				<input type="text" name="topic_background" id="topic_background" class="input" value="{{ TOPIC_BCKG }}" pattern="#[a-fA-F0-9]{6,6}" size="7" title="{{ lang('TCS_COLORPICKER_EXPLAIN') }}" onchange="document.getElementById('topic_backgroundr_hex').value = this.value;" />
+
+				<input type="color" name="topic_background_hex" id="topic_background_hex" class="input" value="{{ TOPIC_BCKG }}" title="{{ lang('TCS_COLORPICKER_EXPLAIN') }}" onchange="document.getElementById('topic_background').value = this.value;"/>
+				{{ lang('TCS_TOPIC_HEX_STORED') }}{{ lang('COLON') }}
+				<input type="text" class="input" value="{{ TOPIC_BCKG }}" size="7" title="{{ lang('TCS_COLORPICKER_STORED') }}" readonly="readonly" disabled="disabled" />
+
+				<input type="color" class="input" value="{{ TOPIC_BCKG }}" title="{{ lang('TCS_COLORPICKER_STORED') }}" adonly="readonly" disabled="disabled" />
+			</dd>
+		</dl>
+
+		{# Here we use just PX but for future references #}
+		{# font-size:medium|xx-small|x-small|small|large|x-large|xx-large|smaller|larger|length|initial|inherit; #}
+		{# https://www.w3schools.com/cssref/css_units.asp #}
+		<dl>
+			<dt>
+				<label for="topic_font_size"><i class="fa fa-text-height fa-fw tcs-fa-green"></i> {{ lang('TCS_TOPIC_F_SIZE') ~ lang('COLON') }}</label><br>{{ lang('TCS_TOPIC_F_SIZE_NATIVE') }}
+			</dt>
+			<dd>
+				<input type="number" class="inputbox autowidth" min="0" max="40" maxlength="2" pattern="[0-9]{{ '{' }}2{{ '}' }}" name="topic_font_size" id="topic_font_size" tabindex="2" size="3" value="{{ TOPIC_FONT_SIZE }}" title="{{ lang('TCS_TOPIC_F_SIZE_RANGE') }}" /><a href="https://www.w3schools.com/cssref/pr_font_font-size.asp" target="blank">{{ lang('TCS_W3S') }}</a>
+			</dd>
+		</dl>
+
+		{# Here we should take car of the syntax for future references #}
+		{# font-weight: normal|bold|bolder|lighter|number|initial|inherit; #}
+		{# https://www.w3schools.com/cssref/pr_font_weight.asp #}
+		<dl>
+			<dt>
+				<label for="topic_font_weight"><i class="fa fa-font fa-fw tcs-fa-green"></i> {{ lang('TCS_TOPIC_F_WEIGHT') ~ lang('COLON') }}</label><br>{{ lang('TCS_BLANK') }}
+			</dt>
+			<dd>
+				<select name="topic_font_weight" id="topic_font_weight">{{ TOPIC_FONT_WEIGHT }}</select>
+				<a href="https://www.w3schools.com/cssref/pr_font_weight.asp" target="blank">{{ lang('TCS_W3S') }}</a>
+			</dd>
+		</dl>
+
+		{# Here we should take car of the syntax for future references #}
+		{# font-style: normal|italic|oblique|initial|inherit; #}
+		{# https://www.w3schools.com/cssref/pr_font_font-style.asp #}
+		<dl>
+			<dt>
+				<label for="topic_font_style"><i class="fa fa-italic fa-fw tcs-fa-green"></i> {{ lang('TCS_TOPIC_F_STYLE') ~ lang('COLON') }}</label><br>{{ lang('TCS_BLANK') }}
+			</dt>
+			<dd>
+				<select name="topic_font_style" id="topic_font_style">{{ TOPIC_FONT_STYLE }}</select>
+				<a href="https://www.w3schools.com/cssref/pr_font_font-style.asp" target="blank">{{ lang('TCS_W3S') }}</a>
+			</dd>
+		</dl>
+
+		{# Here we should take car of the syntax for future references #}
+		{# font-family: family-name|generic-family|initial|inherit; #}
+		{# https://www.w3schools.com/cssref/pr_font_font-family.asp #}
+		<dl>
+			<dt>
+				<label for="topic_font_family"><i class="fa fa-object-group fa-fw tcs-fa-green"></i> {{ lang('TCS_TOPIC_F_FAMILY') ~ lang('COLON') }}</label><br>{{ lang('TCS_TOPIC_F_FAMILY_HOLDER') }}
+			</dt>
+			<dd>
+				<input name="topic_font_family" id="topic_font_family" class="inputbox autowidth" tabindex="5" type="text" size="45" maxlength="80" value="{{ TOPIC_FONT_FAMILY }}" title="{{ lang('TCS_TOPIC_F_FAMILY_HOLDER') }}" /><a href="https://www.w3schools.com/cssref/pr_font_font-family.asp" target="blank">{{ lang('TCS_W3S') }}</a> {{ lang('TCS_BLANK') }}
+			</dd>
+		</dl>
+	</fieldset>
+{% endif %}
