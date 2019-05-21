@@ -61,15 +61,11 @@ class acp_listener implements EventSubscriberInterface
 	 */
 	public function tcs_acp_manage_forums_request_data($event)
 	{
-		$forum_data = $event['forum_data'];
-
-		$forum_data['forum_topic_priority'] = $this->request->variable('forum_topic_priority', 0);
-
-		$event['forum_data'] = $forum_data;
+		$event->update_subarray('forum_data', 'forum_topic_priority', $this->request->variable('forum_topic_priority', 0));
 	}
 
 	/**
-	 * New Forums added (default disabled).
+	 * New Forums added (default enabled).
 	 *
 	 * @event  core.acp_manage_forums_initialise_data
 	 * @param  \phpbb\event\data	$event		The event object
@@ -78,11 +74,12 @@ class acp_listener implements EventSubscriberInterface
 	 */
 	public function tcs_acp_manage_forums_initialise_data($event)
 	{
-		if ($event['action'] == 'add')
+		/* Here we can't update a non-existing index with update_subarray */
+		if ($event['action'] === 'add')
 		{
 			$forum_data = $event['forum_data'];
 
-			$forum_data['forum_topic_priority'] = (bool) true;
+			$forum_data['forum_topic_priority'] = true;
 
 			$event['forum_data'] = $forum_data;
 		}
@@ -98,10 +95,6 @@ class acp_listener implements EventSubscriberInterface
 	 */
 	public function tcs_acp_manage_forums_display_form($event)
 	{
-		$template_data = $event['template_data'];
-
-		$template_data['S_FORUM_TOPIC_PRIORITY'] = $event['forum_data']['forum_topic_priority'];
-
-		$event['template_data'] = $template_data;
+		$event->update_subarray('template_data', 'S_FORUM_TOPIC_PRIORITY', (bool) $event['forum_data']['forum_topic_priority']);
 	}
 }

@@ -43,4 +43,7 @@ $lang = array_merge($lang, array(
 	'TCS_BLANK'							=> '<em>(Leave it blank to disable.)</em>',
 	'TCS_TOPIC_FONT_SIZE_MAX_80'		=> 'The font size can not be more than 80px.',
 	'TCS_FONT_FAMILY_MAX_40'			=> 'The font family can not be more than 40 chars long.',
+
+	// Translators please do not change the following line, no need to translate it!
+	'PHPBBSTUDIO_TCS_CREDIT_LINE'		=> '<a href="https://phpbbstudio.com">Topic Cement Style</a> &copy; 2019 - phpBB Studio',
 ));

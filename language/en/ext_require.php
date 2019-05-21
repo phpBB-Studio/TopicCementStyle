@@ -18,7 +18,11 @@ if (empty($lang) || !is_array($lang))
 	$lang = array();
 }
 
+/*
+ * Some characters you may want to copy&paste:
+ * ’ » “ ” …
+ */
 $lang = array_merge($lang, array(
-	'DTST_ERROR_325_VERSION'	=> 'Minimum phpBB version required is 3.2.5-RC1 but less than 3.3.0@dev',
-	'DTST_ERROR_PHP_VERSION'	=> 'PHP version must be equal or greater than 5.5',
+	'ERROR_PHPBB_VERSION'	=> 'Minimum phpBB version required is %1$s but less than %2$s',
+	'ERROR_PHP_VERSION'		=> 'Minimum PHP version required is %1$s',
 ));

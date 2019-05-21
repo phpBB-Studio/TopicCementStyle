@@ -21,7 +21,7 @@ class install_permissions extends \phpbb\db\migration\migration
 	 */
 	static public function depends_on()
 	{
-		return array('\phpbb\db\migration\data\v32x\v322');
+		return array('\phpbb\db\migration\data\v32x\v327');
 	}
 
 	/**

@@ -2,8 +2,8 @@
 	"name": "phpbbstudio/tcs",
 	"type": "phpbb-extension",
 	"description": "Prioritise and Style Cemented Topics",
-	"version": "1.1.0-beta",
-	"time": "2018-11-11",
+	"version": "1.1.1-beta",
+	"time": "2019-05-19",
 	"license": "GPL-2.0",
 	"authors": [
 		{
@@ -20,7 +20,7 @@
 	"extra": {
 		"display-name": "phpBB Studio - Topic Cement Style",
 		"soft-require": {
-			"phpbb/phpbb": ">=3.2.5-RC1,<3.3.0@dev"
+			"phpbb/phpbb": ">=3.2.7,<3.3.0@dev"
 		}
 	}
 }

@@ -21,7 +21,7 @@ class ext extends \phpbb\extension\base
 	/**
 	 * Check whether the extension can be enabled.
 	 * Provides meaningful(s) error message(s) and the back-link on failure.
-	 * CLI and 3.1/3.2 compatible (we do not use the $lang object here on purpose)
+	 * CLI compatible.
 	 *
 	 * @return bool
 	 */
@@ -33,15 +33,21 @@ class ext extends \phpbb\extension\base
 		$user->add_lang_ext('phpbbstudio/tcs', 'ext_require');
 		$lang = $user->lang;
 
-		if ( !(phpbb_version_compare(PHPBB_VERSION, '3.2.5-RC1', '>=') && phpbb_version_compare(PHPBB_VERSION, '3.3.0@dev', '<')) )
+		if ( !(phpbb_version_compare(PHPBB_VERSION, '3.2.7', '>=') && phpbb_version_compare(PHPBB_VERSION, '3.3.0@dev', '<')) )
 		{
-			$lang['EXTENSION_NOT_ENABLEABLE'] .= '<br>' . $user->lang('DTST_ERROR_325_VERSION');
+			/**
+			 * Despite it seems wrong that's the right approach and not an error in coding
+			 * That's done in order to avoid a PHP error like
+			 * "Indirect modification of overloaded property phpbb/user::$lang has no effect"
+			 * Discussed here: https://www.phpbb.com/community/viewtopic.php?p=14724151#p14724151
+			*/
+			$lang['EXTENSION_NOT_ENABLEABLE'] .= '<br>' . $user->lang('ERROR_PHPBB_VERSION', '3.2.7', '3.3.0@dev');
 			$is_enableable = false;
 		}
 
 		if (!phpbb_version_compare(PHP_VERSION, '5.5', '>='))
 		{
-			$lang['EXTENSION_NOT_ENABLEABLE'] .= '<br>' . $user->lang('DTST_ERROR_PHP_VERSION');
+			$lang['EXTENSION_NOT_ENABLEABLE'] .= '<br>' . $user->lang('ERROR_PHP_VERSION', '5.5');
 			$is_enableable = false;
 		}
 

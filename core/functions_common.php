@@ -29,7 +29,10 @@ class functions_common
 	 * @return void
 	 * @access public
 	 */
-	public function __construct(\phpbb\auth\auth $auth, \phpbb\db\driver\driver_interface $db)
+	public function __construct(
+		\phpbb\auth\auth $auth, 
+		\phpbb\db\driver\driver_interface $db
+	)
 	{
 		$this->auth		= $auth;
 		$this->db		= $db;
@@ -62,12 +65,11 @@ class functions_common
 		$sql = 'SELECT forum_topic_priority
 			FROM ' . FORUMS_TABLE . '
 			WHERE forum_id = ' . (int) $forum_id;
-
 		$result = $this->db->sql_query_limit($sql, 1);
 		$s_enabled = (bool) $this->db->sql_fetchfield('forum_topic_priority');
 		$this->db->sql_freeresult($result);
 
-		return $s_enabled;
+		return (bool) $s_enabled;
 	}
 
 	/**
@@ -125,5 +127,4 @@ class functions_common
 
 		return (string) $options;
 	}
-
-}//EndOfClass
+}

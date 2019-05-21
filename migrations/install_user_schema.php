@@ -19,26 +19,26 @@ class install_user_schema extends \phpbb\db\migration\migration
 
 	static public function depends_on()
 	{
-		return array('\phpbb\db\migration\data\v32x\v322');
+		return array('\phpbb\db\migration\data\v32x\v327');
 	}
 
 	public function update_schema()
 	{
 		return array(
 			'add_columns'	=> array(
-				$this->table_prefix . 'topics'			=> array(
-					'topic_priority'				=> array('ULINT', 0),
-					'topic_color'					=> array('VCHAR_UNI:7', null),		// HexDec color MAX 7
-					'topic_background'				=> array('VCHAR_UNI:7', null),		// HexDec color MAX 7
-					'topic_font_size'				=> array('USINT', 0),				// font_size in PX - if 0 inherits
-					'topic_font_weight'				=> array('VCHAR_UNI:30', null),		// font_weight
-					'topic_font_style'				=> array('VCHAR_UNI:30', null),		// font_style
-					'topic_font_family'				=> array('VCHAR_UNI:80', null),		// font-family
+				$this->table_prefix . 'topics'	=> array(
+					'topic_priority'		=> array('ULINT', 0),
+					'topic_color'			=> array('VCHAR_UNI:7', null),		// HexDec color MAX 7
+					'topic_background'		=> array('VCHAR_UNI:7', null),		// HexDec color MAX 7
+					'topic_font_size'		=> array('USINT', 0),				// font_size in PX - if 0 inherits
+					'topic_font_weight'		=> array('VCHAR_UNI:30', null),		// font_weight
+					'topic_font_style'		=> array('VCHAR_UNI:30', null),		// font_style
+					'topic_font_family'		=> array('VCHAR_UNI:80', null),		// font-family
 				),
 			),
 			'add_index' => array(
-				$this->table_prefix . 'topics'			=> array(
-					'topic_priority'				=> array('topic_priority'),
+				$this->table_prefix . 'topics'	=> array(
+					'topic_priority'		=> array('topic_priority'),
 				),
 			),
 		);
@@ -48,7 +48,7 @@ class install_user_schema extends \phpbb\db\migration\migration
 	{
 		return array(
 			'drop_columns'	=> array(
-				$this->table_prefix . 'topics'			=> array(
+				$this->table_prefix . 'topics'	=> array(
 					'topic_priority',
 					'topic_color',
 					'topic_background',
@@ -59,7 +59,7 @@ class install_user_schema extends \phpbb\db\migration\migration
 				),
 			),
 			'drop_keys' => array(
-				$this->table_prefix . 'topics'			=> array(
+				$this->table_prefix . 'topics'	=> array(
 					'topic_priority',
 				),
 			),
