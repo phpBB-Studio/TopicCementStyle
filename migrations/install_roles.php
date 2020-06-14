@@ -3,7 +3,7 @@
  *
  * Topic Cement Style. An extension for the phpBB Forum Software package.
  *
- * @copyright (c) 2018, phpBB Studio, https://www.phpbbstudio.com
+ * @copyright (c) 2020, phpBB Studio, https://www.phpbbstudio.com
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -13,40 +13,33 @@ namespace phpbbstudio\tcs\migrations;
 class install_roles extends \phpbb\db\migration\migration
 {
 	/**
-	 * Assign migration file dependencies for this migration.
-	 *
-	 * @return array		Array of migration files
-	 * @access public
-	 * @static
-	 */
+	* {@inheritdoc}
+	*/
 	static public function depends_on()
 	{
-		return array(
+		return [
 			'\phpbb\db\migration\data\v32x\v327',
 			'\phpbbstudio\tcs\migrations\install_permissions',
-		);
+		];
 	}
 
 	/**
-	 * Add the Topic Cement Style extension permissions to the database.
-	 *
-	 * @return array 		Array of permissions
-	 * @access public
-	 */
+	* {@inheritdoc}
+	*/
 	public function update_data()
 	{
-		$data = array();
+		$data = [];
 
 		/* Admins Group permissions */
 		if ($this->role_exists('ROLE_ADMIN_FULL'))
 		{
-			$data[] = array('permission.permission_set', array('ROLE_ADMIN_FULL', 'a_set_priority', 'role'));
+			$data[] = ['permission.permission_set', ['ROLE_ADMIN_FULL', 'a_set_priority', 'role']];
 		}
 
 		/* Moderators Group permissions */
 		if ($this->role_exists('ROLE_MOD_FULL'))
 		{
-			$data[] = array('permission.permission_set', array('ROLE_MOD_FULL', 'm_set_priority', 'role'));
+			$data[] = ['permission.permission_set', ['ROLE_MOD_FULL', 'm_set_priority', 'role']];
 		}
 
 		return $data;

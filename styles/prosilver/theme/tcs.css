@@ -1,14 +1,5 @@
 /* CSS style*/
 
-.tcs-fieldset-1 {
-	padding: 5px 10px;
-	border-radius: 7px;
-	margin: 10px 0;
-	box-shadow: 1px 2px 3px grey;
-	font-size: inherit;
-	background-color: #e1f1ff;
-}
-
 .tcs-bold {
 	font-weight: bold;
 }
@@ -19,10 +10,13 @@
 	font-size: 1.1em;
 }
 
-fieldset.fields1 dt {
-	width: 20em;
+.tcs-panel {
+	margin-bottom: 4px;
+	padding: 5px 10px;
+	border-radius: 7px;
 }
 
-fieldset.fields1 dd {
-	margin-left: 21em;
+.tcs-border {
+	border: 1px solid #cccccc;
+	box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.2), 0 4px 20px 0 rgba(0, 0, 0, 0.19);
 }

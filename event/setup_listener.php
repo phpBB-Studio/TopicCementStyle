@@ -3,16 +3,13 @@
  *
  * Topic Cement Style. An extension for the phpBB Forum Software package.
  *
- * @copyright (c) 2018, phpBB Studio, https://www.phpbbstudio.com
+ * @copyright (c) 2020, phpBB Studio, https://www.phpbbstudio.com
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
 
 namespace phpbbstudio\tcs\event;
 
-/**
- * @ignore
- */
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -20,34 +17,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class setup_listener implements EventSubscriberInterface
 {
-	/**
-	 * Assign functions defined in this class to event listeners in the core.
-	 *
-	 * @static
-	 * @return array
-	 * @access public
-	 */
-	static public function getSubscribedEvents()
-	{
-		return array(
-			'core.user_setup_after'								=> 'setup_lang',
-			'core.permissions'									=> 'setup_permissions',
-			'core.viewforum_modify_topic_ordering'				=> 'tcs_viewforum_modify_topic_ordering',
-			'core.viewforum_modify_sort_direction'				=> 'tcs_viewforum_modify_sort_direction',
-			'core.viewforum_get_topic_ids_data'					=> 'tcs_viewforum_get_topic_ids_data',
-			'core.viewforum_get_announcement_topic_ids_data'	=> array('tcs_viewforum_get_announcement_topic_ids_data', -1,),
-			'core.posting_modify_template_vars'					=> 'tcs_topic_data_topic_priority',
-			'core.posting_modify_submission_errors'				=> 'tcs_topic_priority_add_to_post_data',
-			'core.posting_modify_submit_post_before'			=> 'tcs_topic_priority_add',
-			'core.posting_modify_message_text'					=> 'tcs_modify_topic_priority',
-			'core.submit_post_modify_sql_data'					=> 'tcs_submit_post_modify_sql_data',
-			'core.viewtopic_modify_page_title'					=> 'tcs_viewtopic_modify_page_title',
-			'core.viewforum_modify_topics_data'					=> 'tcs_viewforum_modify_topics_data',
-			'core.viewforum_modify_topicrow'					=> 'tcs_viewforum_modify_topicrow',
-			'core.display_forums_modify_template_vars'			=> 'tcs_display_forums_modify_template_vars',
-			'core.display_forums_before'						=> 'tcs_display_forums_before',
-		);
-	}
 	/** @var \phpbb\auth\auth */
 	protected $auth;
 
@@ -76,14 +45,13 @@ class setup_listener implements EventSubscriberInterface
 	 * @param  \phpbb\template\template					$template		Template object
 	 * @param  \phpbbstudio\tcs\core\functions_common	$functions		Custom class of functions
 	 * @return void
-	 * @access public
 	 */
 	public function __construct(
-		\phpbb\auth\auth $auth, 
-		\phpbb\db\driver\driver_interface $db, 
-		\phpbb\language\language $language, 
-		\phpbb\request\request $request, 
-		\phpbb\template\template $template, 
+		\phpbb\auth\auth $auth,
+		\phpbb\db\driver\driver_interface $db,
+		\phpbb\language\language $language,
+		\phpbb\request\request $request,
+		\phpbb\template\template $template,
 		\phpbbstudio\tcs\core\functions_common $functions
 	)
 	{
@@ -96,10 +64,36 @@ class setup_listener implements EventSubscriberInterface
 	}
 
 	/**
+	 * Assign functions defined in this class to event listeners in the core.
+	 *
+	 * @static
+	 * @return array
+	 */
+	static public function getSubscribedEvents()
+	{
+		return [
+			'core.user_setup_after'								=> 'setup_lang',
+			'core.permissions'									=> 'setup_permissions',
+			'core.viewforum_modify_topic_ordering'				=> 'tcs_viewforum_modify_topic_ordering',
+			'core.viewforum_get_topic_ids_data'					=> 'tcs_viewforum_get_topic_ids_data',
+			'core.viewforum_get_announcement_topic_ids_data'	=> ['tcs_viewforum_get_announcement_topic_ids_data', -1,],
+			'core.posting_modify_template_vars'					=> 'tcs_topic_data_topic_priority',
+			'core.posting_modify_submission_errors'				=> 'tcs_topic_priority_add_to_post_data',
+			'core.posting_modify_submit_post_before'			=> 'tcs_topic_priority_add',
+			'core.posting_modify_message_text'					=> 'tcs_modify_topic_priority',
+			'core.submit_post_modify_sql_data'					=> 'tcs_submit_post_modify_sql_data',
+			'core.viewtopic_modify_page_title'					=> 'tcs_viewtopic_modify_page_title',
+			'core.viewforum_modify_topics_data'					=> 'tcs_viewforum_modify_topics_data',
+			'core.viewforum_modify_topicrow'					=> 'tcs_viewforum_modify_topicrow',
+			'core.display_forums_modify_template_vars'			=> 'tcs_display_forums_modify_template_vars',
+			'core.display_forums_before'						=> 'tcs_display_forums_before',
+		];
+	}
+
+	/**
 	 * Load extension common language file during user set up.
 	 *
 	 * @return void
-	 * @access public
 	 */
 	public function setup_lang()
 	{
@@ -112,16 +106,15 @@ class setup_listener implements EventSubscriberInterface
 	 * @event  core.permissions
 	 * @param  \phpbb\event\data		$event		The event object
 	 * @return void
-	 * @access public
 	 */
-	public function setup_permissions($event)
+	public function setup_permissions(\phpbb\event\data $event)
 	{
 		$categories = $event['categories'];
 		$permissions = $event['permissions'];
 
 		if (empty($categories['phpbb_studio']))
 		{
-			/* Setting up a custom CAT */
+			/* Setting up our custom CAT */
 			$categories['phpbb_studio'] = 'ACL_CAT_PHPBB_STUDIO';
 
 			$event['categories'] = $categories;
@@ -146,43 +139,22 @@ class setup_listener implements EventSubscriberInterface
 	 * @event  core.viewforum_modify_topic_ordering
 	 * @param  \phpbb\event\data	$event		The event object
 	 * @return void
-	 * @access public
 	 */
-	public function tcs_viewforum_modify_topic_ordering($event)
+	public function tcs_viewforum_modify_topic_ordering(\phpbb\event\data $event)
 	{
 		$forum_id = $this->request->variable('f', 0);
 
-		if ($this->functions->tcs_forum_enabled($forum_id))
-		{
-			$event['sort_by_sql'] = array(
-				'a' => array('t.topic_priority', 't.topic_first_poster_name'),
-				't' => array('t.topic_priority', 't.topic_last_post_time', 't.topic_last_post_id'),
-				'r' => (($this->auth->acl_get('m_approve', $forum_id)) 
-						? array('t.topic_priority', 't.topic_posts_approved + t.topic_posts_unapproved + t.topic_posts_softdeleted') 
-						: array('t.topic_priority', 't.topic_posts_approved')),
-				's' => array('t.topic_priority', 'LOWER(t.topic_title)'),
-				'v' => array('t.topic_priority', 't.topic_views'),
-			);
-		}
-	}
-
-	/**
-	 * Modify the topic sort ordering if needed
-	 *
-	 * @event core.viewforum_modify_sort_direction
-	 * @param  \phpbb\event\data	$event		The event object
-	 * @return void
-	 * @access public
-	 */
-	public function tcs_viewforum_modify_sort_direction($event)
-	{
-		$forum_id = $this->request->variable('f', 0);
-
-		/* Overrides also UCP's choice if the TCS is active in this forum */
-		if ($this->functions->tcs_forum_enabled($forum_id))
-		{
-			$event['direction'] = 'DESC';
-		}
+		$event['sort_by_sql'] = array(
+			'a' => array('t.topic_priority', 't.topic_first_poster_name'),
+			't' => array('t.topic_priority', 't.topic_last_post_time', 't.topic_last_post_id'),
+			'r' => (
+				$this->auth->acl_get('m_approve', $forum_id)
+				? array('t.topic_priority', 't.topic_posts_approved + t.topic_posts_unapproved + t.topic_posts_softdeleted')
+				: array('t.topic_priority', 't.topic_posts_approved')
+			),
+			's' => array('t.topic_priority', 'LOWER(t.topic_title)'),
+			'v' => array('t.topic_priority', 't.topic_views'),
+		);
 	}
 
 	/**
@@ -191,11 +163,9 @@ class setup_listener implements EventSubscriberInterface
 	 * @event  core.viewforum_get_topic_ids_data
 	 * @param  \phpbb\event\data	$event		The event object
 	 * @return void
-	 * @access public
 	 */
-	public function tcs_viewforum_get_topic_ids_data($event)
+	public function tcs_viewforum_get_topic_ids_data(\phpbb\event\data $event)
 	{
-		/* We don't check for forum enabled to avoid issues with active topics */
 		$store_reverse = $event['store_reverse'];
 		$sql_sort_order = $event['sql_sort_order'];
 
@@ -212,13 +182,11 @@ class setup_listener implements EventSubscriberInterface
 	 * @event  core.viewforum_get_announcement_topic_ids_data
 	 * @param  \phpbb\event\data	$event		The event object
 	 * @return void
-	 * @access public
 	 */
-	public function tcs_viewforum_get_announcement_topic_ids_data($event)
+	public function tcs_viewforum_get_announcement_topic_ids_data(\phpbb\event\data $event)
 	{
 		/**
-		 * We don't check for forum enabled to keep the priority of Global Announcements board-wide 
-		 * Our event overrides the similar one of the Topics Hierarchy extension if enabled
+		 * This event overrides the similar one of the 3Di's Topics Hierarchy extension, if enabled
 		 */
 		$sql_ary = $event['sql_ary'];
 
@@ -233,13 +201,10 @@ class setup_listener implements EventSubscriberInterface
 	 * @event  core.posting_modify_template_vars
 	 * @param  \phpbb\event\data	$event		The event object
 	 * @return void
-	 * @access public
 	 */
-	public function tcs_topic_data_topic_priority($event)
+	public function tcs_topic_data_topic_priority(\phpbb\event\data $event)
 	{
-		$forum_id = $event['post_data']['forum_id'];
-
-		if ($this->functions->tcs_is_authed() && $this->functions->tcs_forum_enabled($forum_id))
+		if ($this->functions->tcs_is_authed())
 		{
 			$mode = $event['mode'];
 
@@ -247,16 +212,16 @@ class setup_listener implements EventSubscriberInterface
 
 			$post_data = $event['post_data'];
 
-			$post_data['topic_priority'] = (!empty($post_data['topic_priority'])) ? $post_data['topic_priority'] : 0;
-			$post_data['topic_color'] = (!empty($post_data['topic_color'])) ? $post_data['topic_color'] : '';
-			$post_data['topic_background'] = (!empty($post_data['topic_background'])) ? $post_data['topic_background'] : '';
-			$post_data['topic_font_size'] = (!empty($post_data['topic_font_size'])) ? $post_data['topic_font_size'] : 0;
-			$post_data['topic_font_weight'] = (!empty($post_data['topic_font_weight'])) ? $post_data['topic_font_weight'] : '';
-			$post_data['topic_font_style'] = (!empty($post_data['topic_font_style'])) ? $post_data['topic_font_style'] : '';
-			$post_data['topic_font_family'] = (!empty($post_data['topic_font_family'])) ? $post_data['topic_font_family'] : '';
+			$post_data['topic_priority']		= (!empty($post_data['topic_priority']))	? $post_data['topic_priority']		: 0;
+			$post_data['topic_color']			= (!empty($post_data['topic_color']))		? $post_data['topic_color']			: '';
+			$post_data['topic_background']		= (!empty($post_data['topic_background']))	? $post_data['topic_background']	: '';
+			$post_data['topic_font_size']		= (!empty($post_data['topic_font_size']))	? $post_data['topic_font_size']		: 0;
+			$post_data['topic_font_weight']		= (!empty($post_data['topic_font_weight']))	? $post_data['topic_font_weight']	: '';
+			$post_data['topic_font_style']		= (!empty($post_data['topic_font_style']))	? $post_data['topic_font_style']	: '';
+			$post_data['topic_font_family']		= (!empty($post_data['topic_font_family']))	? $post_data['topic_font_family']	: '';
 
 			/**
-			 * Check if we are posting or editing the very first post of the topic 
+			 * Check if we are posting or editing the very first post of the topic
 			 */
 			if ($mode == 'post' || ($mode == 'edit' && $post_data['topic_first_post_id'] == $post_data['post_id']))
 			{
@@ -275,16 +240,16 @@ class setup_listener implements EventSubscriberInterface
 
 				$s_topic_font_style = $this->functions->tcs_type_select($this->functions->tcs_font_style(), $topic_font_style_select, true);
 
-				$page_data['TOPIC_PRIORITY'] = $this->request->variable('topic_priority', $post_data['topic_priority']);
-				$page_data['TOPIC_COLOR'] = $this->request->variable('topic_color', $post_data['topic_color']);
-				$page_data['TOPIC_BCKG'] = $this->request->variable('topic_background', $post_data['topic_background']);
-				$page_data['TOPIC_FONT_SIZE'] = $this->request->variable('topic_font_size', $post_data['topic_font_size']);
-				$page_data['TOPIC_FONT_WEIGHT'] = $s_topic_font_weight;
-				$page_data['TOPIC_FONT_STYLE'] = $s_topic_font_style;
-				$page_data['TOPIC_FONT_FAMILY'] = $this->request->variable('topic_font_family', $post_data['topic_font_family']);
+				$page_data['TOPIC_PRIORITY']		= $this->request->variable('topic_priority', $post_data['topic_priority']);
+				$page_data['TOPIC_COLOR']			= $this->request->variable('topic_color', $post_data['topic_color']);
+				$page_data['TOPIC_BCKG']			= $this->request->variable('topic_background', $post_data['topic_background']);
+				$page_data['TOPIC_FONT_SIZE']		= $this->request->variable('topic_font_size', $post_data['topic_font_size']);
+				$page_data['TOPIC_FONT_WEIGHT']		= $s_topic_font_weight;
+				$page_data['TOPIC_FONT_STYLE']		= $s_topic_font_style;
+				$page_data['TOPIC_FONT_FAMILY']		= $this->request->variable('topic_font_family', $post_data['topic_font_family']);
 
 				/* Template switch */
-				$page_data['S_TOPIC_PRIORITY'] = (bool) $this->functions->tcs_is_authed();
+				$page_data['S_TOPIC_PRIORITY']		= (bool) $this->functions->tcs_is_authed();
 			}
 
 			$event['page_data']	= $page_data;
@@ -297,13 +262,17 @@ class setup_listener implements EventSubscriberInterface
 	 * @event  core.posting_modify_submission_errors
 	 * @param  \phpbb\event\data	$event		The event object
 	 * @return void
-	 * @access public
 	 */
-	public function tcs_topic_priority_add_to_post_data($event)
+	public function tcs_topic_priority_add_to_post_data(\phpbb\event\data $event)
 	{
-		if ($this->functions->tcs_is_authed() && $this->functions->tcs_forum_enabled($event['forum_id']))
+		if ($this->functions->tcs_is_authed())
 		{
 			$error = $event['error'];
+
+			if ((int) $event['post_data']['topic_priority'] > 4294967295)
+			{
+				$error[] = $this->language->lang('TCS_TOPIC_PRIORITY_MAX');
+			}
 
 			if (utf8_strlen($event['post_data']['topic_font_size']) > 40)
 			{
@@ -317,7 +286,7 @@ class setup_listener implements EventSubscriberInterface
 
 			$event['error'] = $error;
 
-			$event['post_data'] = array_merge($event['post_data'], array(
+			$event['post_data'] = array_merge($event['post_data'], [
 				'topic_priority'	=> $this->request->variable('topic_priority', 0),
 				'topic_color'		=> $this->request->variable('topic_color', '', true),
 				'topic_background'	=> $this->request->variable('topic_background', '', true),
@@ -325,7 +294,7 @@ class setup_listener implements EventSubscriberInterface
 				'topic_font_weight'	=> $this->request->variable('topic_font_weight', '', true),
 				'topic_font_style'	=> $this->request->variable('topic_font_style', '', true),
 				'topic_font_family'	=> $this->functions->tcs_strip_emojis($this->request->variable('topic_font_family', '', true)),
-			));
+			]);
 		}
 	}
 
@@ -335,13 +304,12 @@ class setup_listener implements EventSubscriberInterface
 	 * @event  core.posting_modify_submit_post_before
 	 * @param  \phpbb\event\data	$event		The event object
 	 * @return void
-	 * @access public
 	 */
-	public function tcs_topic_priority_add($event)
+	public function tcs_topic_priority_add(\phpbb\event\data $event)
 	{
-		if ($this->functions->tcs_is_authed() && $this->functions->tcs_forum_enabled($event['forum_id']))
+		if ($this->functions->tcs_is_authed())
 		{
-			$event['data'] = array_merge($event['data'], array(
+			$event['data'] = array_merge($event['data'], [
 				'topic_priority'	=> $event['post_data']['topic_priority'],
 				'topic_color'		=> $event['post_data']['topic_color'],
 				'topic_background'	=> $event['post_data']['topic_background'],
@@ -349,7 +317,7 @@ class setup_listener implements EventSubscriberInterface
 				'topic_font_weight'	=> $event['post_data']['topic_font_weight'],
 				'topic_font_style'	=> $event['post_data']['topic_font_style'],
 				'topic_font_family'	=> $event['post_data']['topic_font_family'],
-			));
+			]);
 		}
 	}
 
@@ -359,21 +327,20 @@ class setup_listener implements EventSubscriberInterface
 	 * @event  core.posting_modify_message_text
 	 * @param  \phpbb\event\data	$event		The event object
 	 * @return void
-	 * @access public
 	 */
-	public function tcs_modify_topic_priority($event)
+	public function tcs_modify_topic_priority(\phpbb\event\data $event)
 	{
-		if ($this->functions->tcs_is_authed() && $this->functions->tcs_forum_enabled($event['forum_id']))
+		if ($this->functions->tcs_is_authed())
 		{
-			$event['post_data'] = array_merge($event['post_data'], array(
-				'topic_priority'	=> $this->request->variable('topic_priority', ((!empty($event['post_data']['topic_priority'])) ? $event['post_data']['topic_priority'] : 0), 0),
-				'topic_color'		=> $this->request->variable('topic_color', ((!empty($event['post_data']['topic_color'])) ? $event['post_data']['topic_color'] : '')),
-				'topic_background'	=> $this->request->variable('topic_background', ((!empty($event['post_data']['topic_background'])) ? $event['post_data']['topic_background'] : '')),
-				'topic_font_size'	=> $this->request->variable('topic_font_size', ((!empty($event['post_data']['topic_font_size'])) ? $event['post_data']['topic_font_size'] : 0), 0),
-				'topic_font_weight'	=> $this->request->variable('topic_font_weight', ((!empty($event['post_data']['topic_font_weight'])) ? $event['post_data']['topic_font_weight'] : ''), true),
-				'topic_font_style'	=> $this->request->variable('topic_font_style', ((!empty($event['post_data']['topic_font_style'])) ? $event['post_data']['topic_font_style'] : ''), true),
-				'topic_font_family'	=> $this->request->variable('topic_font_family', ((!empty($event['post_data']['topic_font_family'])) ? $event['post_data']['topic_font_family'] : ''), true),
-			));
+			$event['post_data'] = array_merge($event['post_data'], [
+				'topic_priority'	=> $this->request->variable('topic_priority', (!empty($event['post_data']['topic_priority']) ? $event['post_data']['topic_priority'] : 0), 0),
+				'topic_color'		=> $this->request->variable('topic_color', (!empty($event['post_data']['topic_color']) ? $event['post_data']['topic_color'] : ''), true),
+				'topic_background'	=> $this->request->variable('topic_background', (!empty($event['post_data']['topic_background']) ? $event['post_data']['topic_background'] : ''), true),
+				'topic_font_size'	=> $this->request->variable('topic_font_size', (!empty($event['post_data']['topic_font_size']) ? $event['post_data']['topic_font_size'] : 0), 0),
+				'topic_font_weight'	=> $this->request->variable('topic_font_weight', (!empty($event['post_data']['topic_font_weight']) ? $event['post_data']['topic_font_weight'] : ''), true),
+				'topic_font_style'	=> $this->request->variable('topic_font_style', (!empty($event['post_data']['topic_font_style']) ? $event['post_data']['topic_font_style'] : ''), true),
+				'topic_font_family'	=> $this->request->variable('topic_font_family', (!empty($event['post_data']['topic_font_family']) ? $event['post_data']['topic_font_family'] : ''), true),
+			]);
 		}
 	}
 
@@ -383,36 +350,35 @@ class setup_listener implements EventSubscriberInterface
 	 * @event  core.submit_post_modify_sql_data
 	 * @param  \phpbb\event\data	$event		The event object
 	 * @return void
-	 * @access public
 	 */
-	public function tcs_submit_post_modify_sql_data($event)
+	public function tcs_submit_post_modify_sql_data(\phpbb\event\data $event)
 	{
 		$mode = $event['post_mode'];
 
-		if (!in_array($mode, array('edit_topic', 'edit_first_post', 'post')))
+		if (!in_array($mode, ['edit_topic', 'edit_first_post', 'post']))
 		{
 			return;
 		}
 
-		$topic_priority = isset($event['data']['topic_priority']) ? $event['data']['topic_priority'] : '';
-		$topic_color = isset($event['data']['topic_color']) ? $event['data']['topic_color'] : '';
-		$topic_background = isset($event['data']['topic_background']) ? $event['data']['topic_background'] : '';
-		$topic_font_size = isset($event['data']['topic_font_size']) ? $event['data']['topic_font_size'] : '';
-		$topic_font_weight = isset($event['data']['topic_font_weight']) ? $event['data']['topic_font_weight'] : '';
-		$topic_font_style = isset($event['data']['topic_font_style']) ? $event['data']['topic_font_style'] : '';
-		$topic_font_family = isset($event['data']['topic_font_family']) ? $event['data']['topic_font_family'] : '';
+		$topic_priority		= isset($event['data']['topic_priority'])		? $event['data']['topic_priority']		: '';
+		$topic_color		= isset($event['data']['topic_color'])			? $event['data']['topic_color']			: '';
+		$topic_background	= isset($event['data']['topic_background'])		? $event['data']['topic_background']	: '';
+		$topic_font_size	= isset($event['data']['topic_font_size'])		? $event['data']['topic_font_size']		: '';
+		$topic_font_weight	= isset($event['data']['topic_font_weight'])	? $event['data']['topic_font_weight']	: '';
+		$topic_font_style	= isset($event['data']['topic_font_style'])		? $event['data']['topic_font_style']	: '';
+		$topic_font_family	= isset($event['data']['topic_font_family'])	? $event['data']['topic_font_family']	: '';
 
 		$data_sql = $event['sql_data'];
 
-		if ($this->functions->tcs_is_authed() && $this->functions->tcs_forum_enabled($data_sql[TOPICS_TABLE]['sql']['forum_id']))
+		if ($this->functions->tcs_is_authed())
 		{
-			$data_sql[TOPICS_TABLE]['sql']['topic_priority'] = (int) $topic_priority;
-			$data_sql[TOPICS_TABLE]['sql']['topic_color'] = (string) $topic_color;
-			$data_sql[TOPICS_TABLE]['sql']['topic_background'] = (string) $topic_background;
-			$data_sql[TOPICS_TABLE]['sql']['topic_font_size'] = (int) $topic_font_size;
-			$data_sql[TOPICS_TABLE]['sql']['topic_font_weight'] = (string) $topic_font_weight;
-			$data_sql[TOPICS_TABLE]['sql']['topic_font_style'] = (string) $topic_font_style;
-			$data_sql[TOPICS_TABLE]['sql']['topic_font_family'] = (string) $topic_font_family;
+			$data_sql[TOPICS_TABLE]['sql']['topic_priority']		= (int) $topic_priority;
+			$data_sql[TOPICS_TABLE]['sql']['topic_color']			= (string) $topic_color;
+			$data_sql[TOPICS_TABLE]['sql']['topic_background']		= (string) $topic_background;
+			$data_sql[TOPICS_TABLE]['sql']['topic_font_size']		= (int) $topic_font_size;
+			$data_sql[TOPICS_TABLE]['sql']['topic_font_weight']		= (string) $topic_font_weight;
+			$data_sql[TOPICS_TABLE]['sql']['topic_font_style']		= (string) $topic_font_style;
+			$data_sql[TOPICS_TABLE]['sql']['topic_font_family']		= (string) $topic_font_family;
 		}
 
 		$event['sql_data'] = $data_sql;
@@ -424,18 +390,10 @@ class setup_listener implements EventSubscriberInterface
 	 * @event  core.viewtopic_modify_page_title
 	 * @param  \phpbb\event\data	$event		The event object
 	 * @return void
-	 * @access public
 	 */
-	public function tcs_viewtopic_modify_page_title($event)
+	public function tcs_viewtopic_modify_page_title(\phpbb\event\data $event)
 	{
-		$topic_data = $event['topic_data'];
-
-		$forum_id = $topic_data['forum_id'];
-
-		if ($this->functions->tcs_forum_enabled($forum_id))
-		{
-			$this->get_topic_color((int) $topic_data['topic_id']);
-		}
+		$this->functions->get_topic_color((int) $event['topic_data']['topic_id']);
 	}
 
 	/**
@@ -444,50 +402,37 @@ class setup_listener implements EventSubscriberInterface
 	 * @event  core.viewforum_modify_topics_data
 	 * @param  \phpbb\event\data	$event		The event object
 	 * @return void
-	 * @access public
 	 */
-	public function tcs_viewforum_modify_topics_data($event)
+	public function tcs_viewforum_modify_topics_data(\phpbb\event\data $event)
 	{
-		$forum_id = $event['forum_id'];
+		$topic_list = $event['topic_list'];
+		$rowset = $event['rowset'];
 
-		if ($this->functions->tcs_forum_enabled($forum_id))
-		{
-			$topic_list = $event['topic_list'];
-			$rowset = $event['rowset'];
+		$this->functions->get_topic_color($topic_list, $rowset);
 
-			$this->get_topic_color($topic_list, $rowset);
-
-			$event['rowset'] = $rowset;
-		}
+		$event['rowset'] = $rowset;
 	}
 
 	/**
-	 * Add the topic title color to the topic_row
+	 * Add the topic title color to the topic_row - viewforum topic list
 	 *
 	 * @event  core.viewforum_modify_topicrow
 	 * @param  \phpbb\event\data	$event		The event object
 	 * @return void
-	 * @access public
 	 */
-	public function tcs_viewforum_modify_topicrow($event)
+	public function tcs_viewforum_modify_topicrow(\phpbb\event\data $event)
 	{
-		$forum_id = $event['row']['forum_id'];
-
-		if ($this->functions->tcs_forum_enabled($forum_id))
-		{
-			$event['topic_row'] = $this->tcs_color_title_in_list($event['row'], $event['topic_row'], 'TOPIC_TITLE');
-		}
+		$event['topic_row'] = $this->functions->tcs_color_title_in_list($event['row'], $event['topic_row'], 'TOPIC_TITLE');
 	}
 
 	/**
-	 * Take care of coloring topic titles for the last topic
+	 * Take care of coloring topic titles for the last topic (not on index)
 	 *
 	 * @event  core.display_forums_before
 	 * @param  \phpbb\event\data	$event		The event object
 	 * @return void
-	 * @access public
 	 */
-	public function tcs_display_forums_before($event)
+	public function tcs_display_forums_before(\phpbb\event\data $event)
 	{
 		$forum_rows = $event['forum_rows'];
 
@@ -496,55 +441,52 @@ class setup_listener implements EventSubscriberInterface
 			return;
 		}
 
-		foreach ($forum_rows as $forum_id => $value)
+		$forum_last_post_ids = [];
+
+		foreach ($forum_rows as $row)
 		{
-			if ($this->functions->tcs_forum_enabled($forum_id))
+			if ($row['forum_last_post_id'])
 			{
-				$forum_last_post_ids = array();
+				$forum_last_post_ids[] = $row['forum_last_post_id'];
+			}
+		}
 
-				foreach ($forum_rows as $row)
+		$sql_array = [
+			'SELECT'	=> 't.topic_id, t.topic_color, t.topic_background, t.topic_font_size, t.topic_font_weight, t.topic_font_style, t.topic_font_family, p.post_id',
+			'FROM'	 	=> [
+				POSTS_TABLE		=> 'p',
+				TOPICS_TABLE	=> 't',
+			],
+			'WHERE'		=> 'p.topic_id = t.topic_id AND ' . $this->db->sql_in_set('p.post_id', $forum_last_post_ids, false, true),
+		];
+
+		$result = $this->db->sql_query($this->db->sql_build_query('SELECT', $sql_array));
+		$topic_color_rows = $this->db->sql_fetchrowset($result);
+		$this->db->sql_freeresult($result);
+
+		foreach ($forum_rows as $forum_id => $forum_data)
+		{
+			$post_id = (int) $forum_data['forum_last_post_id'];
+
+			$topic_color = array_filter($topic_color_rows,
+				function($color_row) use ($post_id)
 				{
-					if ($row['forum_last_post_id'])
-					{
-						$forum_last_post_ids[] = $row['forum_last_post_id'];
-					}
+					return $color_row['post_id'] == $post_id;
 				}
+			);
 
-				$sql_array = array(
-					'SELECT'	=> 't.topic_id, t.topic_color, t.topic_background, t.topic_font_size, t.topic_font_weight, t.topic_font_style, t.topic_font_family, p.post_id',
-					'FROM'	 	=> array(
-						POSTS_TABLE		=> 'p',
-						TOPICS_TABLE	=> 't',
-					),
-					'WHERE'		=> 'p.topic_id = t.topic_id AND ' . $this->db->sql_in_set('p.post_id', $forum_last_post_ids, false, true),
-				);
-
-				$result = $this->db->sql_query($this->db->sql_build_query('SELECT', $sql_array));
-				$topic_color_rows = $this->db->sql_fetchrowset($result);
-				$this->db->sql_freeresult($result);
-
-				foreach ($forum_rows as $forum_id => $forum_data)
+			if (count($topic_color))
+			{
+				foreach ($topic_color as $key => $value)
 				{
-					$post_id = (int) $forum_data['forum_last_post_id'];
-
-					$topic_color = array_filter($topic_color_rows, function($color_row) use ($post_id) {
-						return $color_row['post_id'] == $post_id;
-					});
-
-					if (count($topic_color))
+					if (!empty($topic_color[$key]['topic_color']))
 					{
-						foreach ($topic_color as $key => $value)
-						{
-							if (!empty($topic_color[$key]['topic_color']))
-							{
-								$forum_rows[$forum_id]['topic_color'] = $topic_color[$key]['topic_color'];
-								$forum_rows[$forum_id]['topic_background'] = $topic_color[$key]['topic_background'];
-								$forum_rows[$forum_id]['topic_font_size'] = $topic_color[$key]['topic_font_size'];
-								$forum_rows[$forum_id]['topic_font_weight'] = $topic_color[$key]['topic_font_weight'];
-								$forum_rows[$forum_id]['topic_font_style'] = $topic_color[$key]['topic_font_style'];
-								$forum_rows[$forum_id]['topic_font_family'] = $topic_color[$key]['topic_font_family'];
-							}
-						}
+						$forum_rows[$forum_id]['topic_color']		= $topic_color[$key]['topic_color'];
+						$forum_rows[$forum_id]['topic_background']	= $topic_color[$key]['topic_background'];
+						$forum_rows[$forum_id]['topic_font_size']	= $topic_color[$key]['topic_font_size'];
+						$forum_rows[$forum_id]['topic_font_weight']	= $topic_color[$key]['topic_font_weight'];
+						$forum_rows[$forum_id]['topic_font_style']	= $topic_color[$key]['topic_font_style'];
+						$forum_rows[$forum_id]['topic_font_family']	= $topic_color[$key]['topic_font_family'];
 					}
 				}
 			}
@@ -554,119 +496,14 @@ class setup_listener implements EventSubscriberInterface
 	}
 
 	/**
-	 * Colorize the last post
+	 * Colorize the last post (on index)
 	 *
 	 * @event  core.display_forums_modify_template_vars
 	 * @param  \phpbb\event\data	$event		The event object
 	 * @return void
-	 * @access public
 	 */
-	public function tcs_display_forums_modify_template_vars($event)
+	public function tcs_display_forums_modify_template_vars(\phpbb\event\data $event)
 	{
-		$forums = array();
-		$forums[] = $event['row']['forum_id'];
-
-		foreach ($forums as $forum_id)
-		{
-			if ($this->functions->tcs_forum_enabled($forum_id))
-			{
-				$event['forum_row'] = $this->tcs_color_title_in_list($event['row'], $event['forum_row'], 'LAST_POST_SUBJECT_TRUNCATED');
-			}
-		}
-	}
-
-	/**
-	 * Retrieve the title color
-	 *
-	 * @param  $topic_ids 		array 			the topic id array for which to retrieve the color
-	 * @param  $topic_rowset	array|boolean 	the topic rowset data
-	 * @return string							the style code for the title
-	 * @return void
-	 * @access private
-	 */
-	private function get_topic_color($topic_ids, &$topic_rowset = false)
-	{
-		if ($topic_ids)
-		{
-			if (!is_array($topic_ids))
-			{
-				$topic_ids = array($topic_ids);
-			}
-
-			$sql = 'SELECT topic_id, topic_color, topic_background, topic_font_size, topic_font_weight, topic_font_style, topic_font_family
-					FROM ' . TOPICS_TABLE . '
-					WHERE ' . $this->db->sql_in_set('topic_id', $topic_ids);
-			$result = $this->db->sql_query($sql);
-			$topic_color_rows = $this->db->sql_fetchrowset($result);
-			$this->db->sql_freeresult($result);
-
-			if (!$topic_color_rows)
-			{
-				return;
-			}
-
-			if (!$topic_rowset)
-			{
-				$this->topic_color = $topic_color_rows[0]['topic_color'];
-				$this->topic_background = $topic_color_rows[0]['topic_background'];
-				$this->topic_font_size = $topic_color_rows[0]['topic_font_size'];
-				$this->topic_font_weight = $topic_color_rows[0]['topic_font_weight'];
-				$this->topic_font_style = $topic_color_rows[0]['topic_font_style'];
-				$this->topic_font_family = $topic_color_rows[0]['topic_font_family'];
-
-				$this->template->assign_vars(array(
-					'TOPIC_COLOR', $this->topic_color,
-					'TOPIC_BCKG', $this->topic_background,
-					'TOPIC_FONT_SIZE', $this->topic_font_size,
-					'TOPIC_FONT_WEIGHT', $this->topic_font_weight,
-					'TOPIC_FONT_STYLE', $this->topic_font_style,
-					'TOPIC_FONT_FAMILY', $this->topic_font_family,
-				));
-			}
-			else
-			{
-				foreach ($topic_color_rows as $row)
-				{
-					if (isset($topic_rowset[$row['topic_id']]))
-					{
-						$topic_rowset[$row['topic_id']]['topic_background'] = $row['topic_background'];
-						$topic_rowset[$row['topic_id']]['topic_color'] = $row['topic_color'];
-						$topic_rowset[$row['topic_id']]['topic_font_size'] = $row['topic_font_size'];
-						$topic_rowset[$row['topic_id']]['topic_font_weight'] = $row['topic_font_weight'];
-						$topic_rowset[$row['topic_id']]['topic_font_style'] = $row['topic_font_style'];
-						$topic_rowset[$row['topic_id']]['topic_font_family'] = $row['topic_font_family'];
-					}
-				}
-			}
-		}
-	}
-
-	/**
-	 * Colors and style for the topic titles that are in lists
-	 *
-	 * @param $row			array	The topic row
-	 * @param $list_row		array	The list row
-	 * @param $title_key	string	The key for the title
-	 * @return string				The HTML formatted string for the row
-	 * @access private
-	 */
-	private function tcs_color_title_in_list($row, $list_row, $title_key)
-	{
-		/* At least chose a color first! */
-		if (!empty($row['topic_color']))
-		{
-			$topic_color = $row['topic_color'];
-
-			/* Let's produce valid HTML in any case */
-			$topic_background	= !empty($row['topic_background']) ? 'background-color: ' . $row['topic_background'] . ' !important;' : '';
-			$topic_font_size	= !empty($row['topic_font_size']) ? 'font-size: ' . $row['topic_font_size'] . 'px !important;' : '';
-			$topic_font_weight	= !empty($row['topic_font_weight']) ? 'font-weight: ' . $row['topic_font_weight'] . ' !important;' : '';
-			$topic_font_style	= !empty($row['topic_font_style']) ? 'font-style: ' . $row['topic_font_style'] . ' !important;' : '';
-			$topic_font_family	= !empty($row['topic_font_family']) ? 'font-family: ' . $row['topic_font_family'] . ' !important;' : '';
-
-			$list_row[$title_key] = sprintf('<span style="' . $topic_background . $topic_font_size . $topic_font_weight . $topic_font_style . $topic_font_family . ' color: %s;">%s</span>', $topic_color, $list_row[$title_key]);
-		}
-
-		return $list_row;
+		$event['forum_row'] = $this->functions->tcs_color_title_in_list($event['row'], $event['forum_row'], 'LAST_POST_SUBJECT_TRUNCATED');
 	}
 }

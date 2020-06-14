@@ -1,5 +1,5 @@
 /**
- * Topic Cement Style extension © Copyright phpBB Studio 2019
+ * Topic Cement Style extension © Copyright phpBB Studio 2020
  * https://www.phpbbstudio.com
  *
  * Topic Cement Style is free extension for the phpBB Forum Software Package.

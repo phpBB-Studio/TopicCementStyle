@@ -3,7 +3,7 @@
  *
  * Topic Cement Style. An extension for the phpBB Forum Software package.
  *
- * @copyright (c) 2018, phpBB Studio, https://www.phpbbstudio.com
+ * @copyright (c) 2020, phpBB Studio, https://www.phpbbstudio.com
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -15,14 +15,13 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 /*
  * Some characters you may want to copy&paste:
  * ’ » “ ” …
  */
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'ERROR_PHPBB_VERSION'	=> 'Minimum phpBB version required is %1$s but less than %2$s',
-	'ERROR_PHP_VERSION'		=> 'Minimum PHP version required is %1$s',
-));
+]);

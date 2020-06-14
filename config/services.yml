@@ -11,15 +11,9 @@ services:
         tags:
             - { name: event.listener }
 
-    phpbbstudio.tcs.listener.acp:
-        class: \phpbbstudio\tcs\event\acp_listener
-        arguments:
-            - '@request'
-        tags:
-            - { name: event.listener }
-
     phpbbstudio.tcs.functions.common:
         class: \phpbbstudio\tcs\core\functions_common
         arguments:
             - '@auth'
             - '@dbal.conn'
+            - '@template'
